@@ -1,15 +1,15 @@
 const result = document.getElementById("result");
 
-let isPaid = false;
+let isPaid = false; // 결제 후 true
 
 document.getElementById("fortuneBtn").onclick = () => {
-  result.innerHTML = "오늘은 무난한 하루입니다 🙂";
+  result.innerHTML = "วันนี้เป็นวันที่ดีปานกลาง 😊";
 };
 
 document.getElementById("payBtn").onclick = () => {
   if (!isPaid) {
-    alert("유료 결제 후 이용 가능합니다");
+    alert("กรุณาชำระเงินก่อนใช้งาน");
     return;
   }
-  result.innerHTML = "💰 대길! 재물운 상승, 귀인 등장!";
+  result.innerHTML = "💰 โชคดีมาก! การเงินดี มีโอกาสรับทรัพย์";
 };

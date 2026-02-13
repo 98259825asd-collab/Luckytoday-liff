@@ -1,6 +1,6 @@
 const result = document.getElementById("result");
 
-let isPaid = false; // 결제 후 true로 변경
+let isPaid = false;
 
 document.getElementById("fortuneBtn").onclick = () => {
   result.innerHTML = "오늘은 무난한 하루입니다 🙂";

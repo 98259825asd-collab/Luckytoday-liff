@@ -2,56 +2,52 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lucky Today</title>
 </head>
-<body>
+<body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding:16px;">
 
-  <h1>🍀 Lucky Today</h1>
-  <p>กดปุ่มด้านล่างเพื่อดูดวงวันนี้</p>
+  <h1 style="margin:0 0 6px;">🍀 Lucky Today</h1>
+  <p style="margin:0 0 14px;">กดปุ่มด้านล่างเพื่อดูเลขเด็ดวันนี้</p>
 
-  <button id="fortuneBtn">ดูดวงฟรี</button>
-  <br><br>
-  <button id="payBtn">🔒 ดูดวงแบบพรีเมียม</button>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <button id="fortuneBtn" style="padding:10px 14px; font-size:16px;">ดูเลขเด็ดฟรี</button>
+    <button id="payBtn" style="padding:10px 14px; font-size:16px;">🔒 ดูเลขเด็ดพรีเมียม</button>
+    <button id="refreshPremiumBtn" style="padding:10px 14px; font-size:16px; display:none;">🔁 สุ่มเลขพรีเมียมใหม่</button>
+  </div>
 
-  <div id="result" style="margin-top:20px;font-size:18px;"></div>
+  <div id="result" style="margin-top:18px; font-size:18px; line-height:1.45;"></div>
 
-  <hr>
+  <hr style="margin:18px 0;">
 
-  <h3>💳 ชำระเงินด้วย PromptPay</h3>
-  <img src="62087657-74E1-433B-AC23-22BD4326BAAD.png" width="220" />
-  <p>สแกนเพื่อชำระเงิน แล้วส่งสลิป</p>
+  <h3 style="margin:0 0 10px;">💳 ชำระเงินด้วย PromptPay</h3>
+  <img
+    src="62087657-74E1-433B-AC23-22BD4326BAAD.png"
+    alt="PromptPay QR"
+    style="width:260px; max-width:100%; border-radius:10px; border:1px solid #eee;"
+  />
+  <p style="margin:10px 0 12px;">สแกนเพื่อชำระเงิน แล้วส่งสลิป</p>
 
-  <a href="https://forms.gle/KDjfT2bVan3DPNvLA" target="_blank">
-    <button>📩 ส่งหลักฐานการโอน</button>
+  <a href="https://forms.gle/KDjfT2bVan3DPNvLA" target="_blank" style="text-decoration:none;">
+    <button style="padding:10px 14px; font-size:16px;">📩 ส่งหลักฐานการโอน</button>
   </a>
 
-  <hr>
+  <hr style="margin:18px 0;">
 
-  <h3>✅ ใส่รหัสเพื่อปลดล็อกพรีเมียม</h3>
-  <input id="codeInput" placeholder="ใส่รหัส (เช่น 1234)" style="padding:8px;width:220px;" />
-  <button id="verifyBtn">ยืนยันรหัส</button>
+  <h3 style="margin:0 0 10px;">✅ ใส่รหัสเพื่อปลดล็อกพรีเมียม</h3>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+    <input
+      id="codeInput"
+      placeholder="ใส่รหัส (4 หลัก)"
+      style="padding:10px 12px; font-size:16px; width:160px;"
+    />
+    <button id="verifyBtn" style="padding:10px 14px; font-size:16px;">ยืนยันรหัส</button>
+  </div>
 
-  <p style="font-size:13px;color:#555;margin-top:8px;">
-    หลังส่งสลิปแล้ว รอแอดมินส่งรหัสให้
+  <p style="font-size:13px;color:#666;margin-top:10px;">
+    หลังส่งสลิปแล้ว รอแอดมินส่งรหัสให้ (รหัสจะเปลี่ยนทุกวัน)
   </p>
 
   <script src="app_th.js"></script>
-<p style="font-size:12px;color:#999;">
-  Admin today code: <span id="adminCode"></span>
-</p>
-<script>
-  // app_th.js의 DAILY_CODE를 화면에 보여주기 위해 같은 로직으로 다시 계산
-  (function(){
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, "0");
-    const d = String(now.getDate()).padStart(2, "0");
-    const ymd = `${y}${m}${d}`;
-    let hash = 0;
-    for (let i = 0; i < ymd.length; i++) hash = (hash * 31 + ymd.charCodeAt(i)) % 10000;
-    const code = String(hash).padStart(4, "0");
-    document.getElementById("adminCode").textContent = code;
-  })();
-</script>
 </body>
 </html>

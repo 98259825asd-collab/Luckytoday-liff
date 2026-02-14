@@ -36,6 +36,22 @@
   </p>
 
   <script src="app_th.js"></script>
-
+<p style="font-size:12px;color:#999;">
+  Admin today code: <span id="adminCode"></span>
+</p>
+<script>
+  // app_th.js의 DAILY_CODE를 화면에 보여주기 위해 같은 로직으로 다시 계산
+  (function(){
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    const ymd = `${y}${m}${d}`;
+    let hash = 0;
+    for (let i = 0; i < ymd.length; i++) hash = (hash * 31 + ymd.charCodeAt(i)) % 10000;
+    const code = String(hash).padStart(4, "0");
+    document.getElementById("adminCode").textContent = code;
+  })();
+</script>
 </body>
 </html>

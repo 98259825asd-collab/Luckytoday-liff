@@ -4,12 +4,10 @@ const fortuneBtn = document.getElementById("fortuneBtn");
 const payBtn = document.getElementById("payBtn");
 const verifyBtn = document.getElementById("verifyBtn");
 const codeInput = document.getElementById("codeInput");
-const refreshPremiumBtn = document.getElementById("refreshPremiumBtn");
 
-// ====== 설정 ======
-const PREMIUM_HOURS = 48; // 유효시간(시간 단위)
+let isPaid = false;
 
-// 매일 바뀌는 4자리 코드 생성
+// ====== 오늘 날짜로 4자리 코드 자동생성 ======
 function getDailyCode() {
   const now = new Date();
   const y = now.getFullYear();
@@ -25,10 +23,10 @@ function getDailyCode() {
 }
 const DAILY_CODE = getDailyCode();
 
-// ====== 저장값 ======
-function nowMs() {
-  return Date.now();
-}
+// ====== 로컬 저장(48시간 유효) ======
+const PREMIUM_HOURS = 48;
+
+function nowMs() { return Date.now(); }
 function getPremiumUntil() {
   const v = localStorage.getItem("premium_until");
   return v ? Number(v) : 0;
@@ -40,28 +38,16 @@ function isPremiumActive() {
   return getPremiumUntil() > nowMs();
 }
 
-// 하루 1회 새번호 제한용
-function getRefreshKey() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `refresh_${y}${m}${d}`;
-}
-function canRefreshToday() {
-  return localStorage.getItem(getRefreshKey()) !== "1";
-}
-function markRefreshedToday() {
-  localStorage.setItem(getRefreshKey(), "1");
-}
-
-// ====== 로또 생성 ======
+// ====== 숫자 생성 ======
 function generateThaiLotto() {
   let num = "";
-  for (let i = 0; i < 6; i++) num += Math.floor(Math.random() * 10);
+  for (let i = 0; i < 6; i++) {
+    num += Math.floor(Math.random() * 10);
+  }
   return num;
 }
 
+// ====== 화면 표시 ======
 function showFree() {
   const lotto = generateThaiLotto();
   result.innerHTML = `
@@ -81,27 +67,18 @@ function showPremium() {
     ✅ ชุด A: <b>${a}</b><br>
     ✅ ชุด B: <b>${b}</b><br>
     ✅ ชุด C: <b>${c}</b><br>
-    <small>โชคลาภแรง มีเกณฑ์ถูกรางวัล</small>
+    <small>ดวงการเงินดีมาก มีโชคใหญ่</small>
   `;
 
-  // 언락 성공 후 입력칸 숨김
-  codeInput.style.display = "none";
-  verifyBtn.style.display = "none";
-
-  // 새번호 버튼 표시
-  refreshPremiumBtn.style.display = "inline-block";
+  // ✅ 테스트용: 관리자 오늘 코드 표시(원하면 지워도 됨)
+  result.innerHTML += `
+    <div style="margin-top:10px;font-size:12px;color:#888">
+      Admin today code: ${DAILY_CODE}
+    </div>
+  `;
 }
 
-function showNeedUnlock() {
-  // 언락 입력칸 보이기
-  codeInput.style.display = "inline-block";
-  verifyBtn.style.display = "inline-block";
-
-  // 새번호 버튼 숨김
-  refreshPremiumBtn.style.display = "none";
-}
-
-// ====== 이벤트 ======
+// ====== 버튼 이벤트 ======
 fortuneBtn.onclick = () => {
   showFree();
 };
@@ -109,15 +86,15 @@ fortuneBtn.onclick = () => {
 payBtn.onclick = () => {
   if (isPremiumActive()) {
     showPremium();
-  } else {
-    showNeedUnlock();
-    alert("กรุณาชำระเงินและส่งสลิปก่อน แล้วใส่รหัสเพื่อปลดล็อก");
+    return;
   }
+  alert("กรุณาชำระเงินและส่งสลิปก่อน แล้วใส่รหัสเพื่อปลดล็อก");
 };
 
-// 코드 확인 → 48시간 활성화
+// 코드 확인
 verifyBtn.onclick = () => {
   const code = (codeInput.value || "").trim();
+
   if (code !== DAILY_CODE) {
     alert("❌ รหัสไม่ถูกต้อง");
     return;
@@ -130,30 +107,11 @@ verifyBtn.onclick = () => {
   showPremium();
 };
 
-// 새번호(하루 1회)
-refreshPremiumBtn.onclick = () => {
-  if (!isPremiumActive()) {
-    alert("หมดอายุแล้ว กรุณาปลดล็อกใหม่");
-    showNeedUnlock();
-    return;
-  }
-  if (!canRefreshToday()) {
-    alert("วันนี้คุณสุ่มใหม่ไปแล้ว พรุ่งนี้ลองใหม่ได้");
-    return;
-  }
-  markRefreshedToday();
-  showPremium();
-};
-
-// Enter 키로 코드 확인
+// Enter 키로도 확인
 codeInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") verifyBtn.click();
 });
 
 // 최초 로딩
 showFree();
-if (isPremiumActive()) {
-  showPremium();
-} else {
-  showNeedUnlock();
-}
+if (isPremiumActive()) showPremium();
